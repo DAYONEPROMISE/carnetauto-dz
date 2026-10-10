@@ -1,0 +1,5 @@
+<resources>
+    <style name="Theme.CarnetAutoDZ" parent="android:Theme.Material.Light.NoActionBar">
+        <item name="android:windowBackground">@android:color/white</item>
+    </style>
+</resources>
