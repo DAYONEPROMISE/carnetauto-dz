@@ -319,7 +319,7 @@ fun ExpensesScreen(vm: CarnetViewModel) {
     val vehicle = vm.selectedVehicle()
     val history by vm.expenseHistory.collectAsState()
     var amount by remember { mutableStateOf("") }
-    var category by remember { mutableStateOf(ExpenseCategory.CARBURANT)
+    var category by remember { mutableStateOf(ExpenseCategory.CARBURANT) }
     var note by remember { mutableStateOf("") }
     var expanded by remember { mutableStateOf(false) }
 
