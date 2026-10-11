@@ -76,10 +76,10 @@ fun DashboardScreen(vm: CarnetViewModel) {
                         Text(MaintenanceType.labelFr(r.type), fontWeight = FontWeight.Bold)
                         Text(
                             when (r.status) {
-                                ReminderStatus.OVERDUE -> stringResource(R.string.rem_overdue, -(r.remainingKm ?: 0), r.nextDueKm)
-                                ReminderStatus.SOON -> stringResource(R.string.rem_soon, r.remainingKm ?: 0, r.nextDueKm)
-                                ReminderStatus.NEVER -> stringResource(R.string.rem_never, r.nextDueKm)
-                                ReminderStatus.OK -> stringResource(R.string.rem_ok, r.nextDueKm)
+                                ReminderStatus.OVERDUE -> stringResource(R.string.rem_overdue, -(r.remainingKm ?: 0), r.nextDueKm ?: 0)
+                                ReminderStatus.SOON -> stringResource(R.string.rem_soon, r.remainingKm ?: 0, r.nextDueKm ?: 0)
+                                ReminderStatus.NEVER -> stringResource(R.string.rem_never, r.nextDueKm ?: 0)
+                                ReminderStatus.OK -> stringResource(R.string.rem_ok, r.nextDueKm ?: 0)
                             }
                         )
                     }
@@ -319,7 +319,7 @@ fun ExpensesScreen(vm: CarnetViewModel) {
     val vehicle = vm.selectedVehicle()
     val history by vm.expenseHistory.collectAsState()
     var amount by remember { mutableStateOf("") }
-    var category by remember { mutableStateOf(ExpenseCategory.CARBURANT) }
+    var category by remember { mutableStateOf(ExpenseCategory.CARBURANT)
     var note by remember { mutableStateOf("") }
     var expanded by remember { mutableStateOf(false) }
 
