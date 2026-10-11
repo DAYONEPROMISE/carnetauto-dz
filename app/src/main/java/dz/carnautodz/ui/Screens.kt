@@ -87,12 +87,12 @@ fun DashboardScreen(vm: CarnetViewModel) {
     }
 }
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun VehiclePicker(vm: CarnetViewModel) {
     val vehicles by vm.allVehicles.collectAsState()
     val selected = vm.selectedVehicle()
     var expanded by remember { mutableStateOf(false) }
-    @OptIn(ExperimentalMaterial3Api::class)
     ExposedDropdownMenuBox(expanded = expanded, onExpandedChange = { expanded = it }) {
         OutlinedTextField(
             value = selected?.let { "${it.name} — ${it.currentKm} km" } ?: "Choisir un véhicule",
@@ -201,6 +201,7 @@ fun VehiclesScreen(vm: CarnetViewModel) {
 
 // ---------- Maintenance ----------
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun MaintenanceScreen(vm: CarnetViewModel) {
     val vehicle = vm.selectedVehicle()
@@ -218,7 +219,6 @@ fun MaintenanceScreen(vm: CarnetViewModel) {
             return@Column
         }
         Text("Nouvel entretien", style = MaterialTheme.typography.titleMedium)
-        @OptIn(ExperimentalMaterial3Api::class)
         ExposedDropdownMenuBox(expanded = expanded, onExpandedChange = { expanded = it }) {
             OutlinedTextField(
                 value = MaintenanceType.labelFr(type), onValueChange = {}, readOnly = true,
@@ -311,6 +311,7 @@ fun FaultCodesScreen() {
 
 // ---------- Expenses ----------
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ExpensesScreen(vm: CarnetViewModel) {
     val vehicle = vm.selectedVehicle()
@@ -335,7 +336,6 @@ fun ExpensesScreen(vm: CarnetViewModel) {
         Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
             OutlinedTextField(amount, { amount = it.filter(Char::isDigit) }, label = { Text("Montant (DZD)") },
                 keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number), modifier = Modifier.weight(1f))
-            @OptIn(ExperimentalMaterial3Api::class)
             ExposedDropdownMenuBox(expanded = expanded, onExpandedChange = { expanded = it }, modifier = Modifier.weight(1f)) {
                 OutlinedTextField(
                     value = ExpenseCategory.labelFr(category), onValueChange = {}, readOnly = true,

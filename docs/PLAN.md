@@ -5,7 +5,7 @@
 Offline-first Android app, Kotlin + Compose Material 3 + Room, FR UI with AR
 fault-code content, DZD expenses, zero permissions, no account.
 
-Screens: Suivi (reminders) · Entretien (history) · Codes (48 P0 offline) ·
+Screens: Suivi (reminders) · Entretien (history) · Codes (46 P0/P1 offline) ·
 Dépenses (DZD) · Véhicules (multi-vehicle + odometer).
 
 ## Pipeline

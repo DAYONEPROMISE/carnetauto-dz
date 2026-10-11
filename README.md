@@ -4,7 +4,7 @@ Offline vehicle maintenance logbook for Algerian drivers. 100% offline, no accou
 
 - **Suivi** — km reminders: vidange (10 000 km), courroie (60 000 km), pneus (40 000 km)
 - **Entretien** — service history per vehicle (km + note)
-- **Codes** — offline OBD-II fault-code reference (P0 codes, French + Arabic)
+- **Codes** — offline OBD-II fault-code reference (46 P0/P1 codes, French + Arabic)
 - **Dépenses** — expense tracker in Algerian dinars (DZD), totals by month/category
 - **Véhicules** — multi-vehicle logbook with odometer tracking
 

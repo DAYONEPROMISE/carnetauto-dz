@@ -14,9 +14,9 @@ class FaultCodeCatalogTest {
     }
 
     @Test
-    fun `all codes match P0 pattern`() {
+    fun `all codes match P0-P1 pattern`() {
         FaultCodeCatalog.codes.forEach {
-            assertTrue("bad code ${it.code}", it.code.matches(Regex("P0[0-9]{3}")))
+            assertTrue("bad code ${it.code}", it.code.matches(Regex("P[01][0-9]{3}")))
         }
     }
 
