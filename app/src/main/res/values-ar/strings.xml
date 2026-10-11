@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">CarnetAutoDZ</string>
+    <string name="empty_add">أضف مركبة للبدء.</string>
+    <string name="due_title">الاستحقاقات — %1$s</string>
+    <string name="rem_overdue">تجاوز بـ %1$d كم — مستحق عند %2$d كم</string>
+    <string name="rem_soon">مستحق بعد %1$d كم (عند %2$d كم)</string>
+    <string name="rem_never">لم يُسجل أبدًا — خطط عند %1$d كم</string>
+    <string name="rem_ok">جيد — القادم عند %1$d كم</string>
+    <string name="pick_hint">اختر مركبة</string>
+    <string name="vehicle">مركبة</string>
+    <string name="vehicles">المركبات</string>
+    <string name="add_btn">+ إضافة</string>
+    <string name="counter">العداد</string>
+    <string name="delete">حذف</string>
+    <string name="new_vehicle">مركبة جديدة</string>
+    <string name="name_ex">الاسم (مثال: Clio 4)</string>
+    <string name="plate">الترقيم (اختياري)</string>
+    <string name="km_counter">العداد (كم)</string>
+    <string name="add">إضافة</string>
+    <string name="cancel">إلغاء</string>
+    <string name="counter_of">العداد — %1$s</string>
+    <string name="km_now">الكيلومترات الحالية</string>
+    <string name="save">حفظ</string>
+    <string name="select_vehicle">اختر مركبة.</string>
+    <string name="new_service">صيانة جديدة</string>
+    <string name="type">النوع</string>
+    <string name="km">كم</string>
+    <string name="note">ملاحظة</string>
+    <string name="history">السجل</string>
+    <string name="fault_title">أكواد الأعطال OBD-II (دون إنترنت)</string>
+    <string name="fault_search">بحث (مثال: P0300، حساس)</string>
+    <string name="codes_count">%1$d كود</string>
+    <string name="category">الفئة</string>
+    <string name="amount">المبلغ (دج)</string>
+    <string name="note_opt">ملاحظة (اختياري)</string>
+    <string name="detail_cat">التفاصيل حسب الفئة ↓</string>
+</resources>

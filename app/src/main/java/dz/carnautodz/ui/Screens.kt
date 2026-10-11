@@ -33,9 +33,11 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
+import dz.carnautodz.R
 import dz.carnautodz.data.ExpenseCategory
 import dz.carnautodz.data.MaintenanceType
 import dz.carnautodz.data.Vehicle
@@ -54,10 +56,10 @@ fun DashboardScreen(vm: CarnetViewModel) {
         VehiclePicker(vm)
         Spacer(Modifier.height(12.dp))
         if (vehicle == null) {
-            Text("Ajoutez un véhicule pour commencer.", style = MaterialTheme.typography.bodyLarge)
+            Text(stringResource(R.string.empty_add), style = MaterialTheme.typography.bodyLarge)
             return@Column
         }
-        Text("Échéances — ${vehicle.name}", style = MaterialTheme.typography.titleLarge)
+        Text(stringResource(R.string.due_title, vehicle.name), style = MaterialTheme.typography.titleLarge)
         Spacer(Modifier.height(8.dp))
         val reminders = remember(vehicle.currentKm, history) {
             Reminders.forVehicle(vehicle.currentKm, history)
@@ -74,10 +76,10 @@ fun DashboardScreen(vm: CarnetViewModel) {
                         Text(MaintenanceType.labelFr(r.type), fontWeight = FontWeight.Bold)
                         Text(
                             when (r.status) {
-                                ReminderStatus.OVERDUE -> "Dépassé de ${-(r.remainingKm ?: 0)} km — dû à ${r.nextDueKm} km"
-                                ReminderStatus.SOON -> "Dû dans ${r.remainingKm} km (à ${r.nextDueKm} km)"
-                                ReminderStatus.NEVER -> "Jamais enregistré — prévoir vers ${r.nextDueKm} km"
-                                ReminderStatus.OK -> "OK — prochain à ${r.nextDueKm} km"
+                                ReminderStatus.OVERDUE -> stringResource(R.string.rem_overdue, -(r.remainingKm ?: 0), r.nextDueKm)
+                                ReminderStatus.SOON -> stringResource(R.string.rem_soon, r.remainingKm ?: 0, r.nextDueKm)
+                                ReminderStatus.NEVER -> stringResource(R.string.rem_never, r.nextDueKm)
+                                ReminderStatus.OK -> stringResource(R.string.rem_ok, r.nextDueKm)
                             }
                         )
                     }
@@ -95,17 +97,17 @@ fun VehiclePicker(vm: CarnetViewModel) {
     var expanded by remember { mutableStateOf(false) }
     ExposedDropdownMenuBox(expanded = expanded, onExpandedChange = { expanded = it }) {
         OutlinedTextField(
-            value = selected?.let { "${it.name} — ${it.currentKm} km" } ?: "Choisir un véhicule",
+            value = selected?.let { "${it.name} \u2014 ${it.currentKm} km" } ?: stringResource(R.string.pick_hint),
             onValueChange = {},
             readOnly = true,
-            label = { Text("Véhicule") },
+            label = { Text(stringResource(R.string.vehicle)) },
             trailingIcon = { ExposedDropdownMenuDefaults.TrailingIcon(expanded) },
             modifier = Modifier.fillMaxWidth().menuAnchor()
         )
         ExposedDropdownMenu(expanded = expanded, onDismissRequest = { expanded = false }) {
             vehicles.forEach { v ->
                 DropdownMenuItem(
-                    text = { Text("${v.name} — ${v.currentKm} km") },
+                    text = { Text("${v.name} \u2014 ${v.currentKm} km") },
                     onClick = { vm.selectVehicle(v.id); expanded = false }
                 )
             }
@@ -127,8 +129,8 @@ fun VehiclesScreen(vm: CarnetViewModel) {
 
     Column(Modifier.fillMaxSize().padding(16.dp)) {
         Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween) {
-            Text("Véhicules", style = MaterialTheme.typography.titleLarge)
-            Button(onClick = { showAdd = true }) { Text("+ Ajouter") }
+            Text(stringResource(R.string.vehicles), style = MaterialTheme.typography.titleLarge)
+            Button(onClick = { showAdd = true }) { Text(stringResource(R.string.add_btn)) }
         }
         Spacer(Modifier.height(8.dp))
         LazyColumn(verticalArrangement = Arrangement.spacedBy(8.dp)) {
@@ -143,12 +145,12 @@ fun VehiclesScreen(vm: CarnetViewModel) {
                 ) {
                     Column(Modifier.padding(12.dp)) {
                         Text(v.name, fontWeight = FontWeight.Bold)
-                        Text(if (v.plate.isBlank()) "${v.currentKm} km" else "${v.plate} — ${v.currentKm} km")
+                        Text(if (v.plate.isBlank()) "${v.currentKm} km" else "${v.plate} \u2014 ${v.currentKm} km")
                         Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
                             TextButton(onClick = { editKmFor = v; newKm = v.currentKm.toString() }) {
-                                Text("Compteur")
+                                Text(stringResource(R.string.counter))
                             }
-                            TextButton(onClick = { vm.deleteVehicle(v) }) { Text("Supprimer") }
+                            TextButton(onClick = { vm.deleteVehicle(v) }) { Text(stringResource(R.string.delete)) }
                         }
                     }
                 }
@@ -159,12 +161,12 @@ fun VehiclesScreen(vm: CarnetViewModel) {
     if (showAdd) {
         AlertDialog(
             onDismissRequest = { showAdd = false },
-            title = { Text("Nouveau véhicule") },
+            title = { Text(stringResource(R.string.new_vehicle)) },
             text = {
                 Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
-                    OutlinedTextField(name, { name = it }, label = { Text("Nom (ex. Clio 4)") })
-                    OutlinedTextField(plate, { plate = it }, label = { Text("Immatriculation (optionnel)") })
-                    OutlinedTextField(km, { km = it.filter(Char::isDigit) }, label = { Text("Compteur (km)") },
+                    OutlinedTextField(name, { name = it }, label = { Text(stringResource(R.string.name_ex)) })
+                    OutlinedTextField(plate, { plate = it }, label = { Text(stringResource(R.string.plate)) })
+                    OutlinedTextField(km, { km = it.filter(Char::isDigit) }, label = { Text(stringResource(R.string.km_counter)) },
                         keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number))
                 }
             },
@@ -174,27 +176,27 @@ fun VehiclesScreen(vm: CarnetViewModel) {
                         vm.addVehicle(name.trim(), plate.trim(), km.toIntOrNull() ?: 0)
                         name = ""; plate = ""; km = ""; showAdd = false
                     }
-                }) { Text("Ajouter") }
+                }) { Text(stringResource(R.string.add)) }
             },
-            dismissButton = { TextButton(onClick = { showAdd = false }) { Text("Annuler") } }
+            dismissButton = { TextButton(onClick = { showAdd = false }) { Text(stringResource(R.string.cancel)) } }
         )
     }
 
     editKmFor?.let { v ->
         AlertDialog(
             onDismissRequest = { editKmFor = null },
-            title = { Text("Compteur — ${v.name}") },
+            title = { Text(stringResource(R.string.counter_of, v.name)) },
             text = {
-                OutlinedTextField(newKm, { newKm = it.filter(Char::isDigit) }, label = { Text("Km actuels") },
+                OutlinedTextField(newKm, { newKm = it.filter(Char::isDigit) }, label = { Text(stringResource(R.string.km_now)) },
                     keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number))
             },
             confirmButton = {
                 Button(onClick = {
                     vm.updateKm(v, newKm.toIntOrNull() ?: v.currentKm)
                     editKmFor = null
-                }) { Text("Enregistrer") }
+                }) { Text(stringResource(R.string.save)) }
             },
-            dismissButton = { TextButton(onClick = { editKmFor = null }) { Text("Annuler") } }
+            dismissButton = { TextButton(onClick = { editKmFor = null }) { Text(stringResource(R.string.cancel)) } }
         )
     }
 }
@@ -215,14 +217,14 @@ fun MaintenanceScreen(vm: CarnetViewModel) {
         VehiclePicker(vm)
         Spacer(Modifier.height(8.dp))
         if (vehicle == null) {
-            Text("Sélectionnez un véhicule.")
+            Text(stringResource(R.string.select_vehicle))
             return@Column
         }
-        Text("Nouvel entretien", style = MaterialTheme.typography.titleMedium)
+        Text(stringResource(R.string.new_service), style = MaterialTheme.typography.titleMedium)
         ExposedDropdownMenuBox(expanded = expanded, onExpandedChange = { expanded = it }) {
             OutlinedTextField(
                 value = MaintenanceType.labelFr(type), onValueChange = {}, readOnly = true,
-                label = { Text("Type") },
+                label = { Text(stringResource(R.string.type)) },
                 trailingIcon = { ExposedDropdownMenuDefaults.TrailingIcon(expanded) },
                 modifier = Modifier.fillMaxWidth().menuAnchor()
             )
@@ -237,9 +239,9 @@ fun MaintenanceScreen(vm: CarnetViewModel) {
         }
         Spacer(Modifier.height(8.dp))
         Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
-            OutlinedTextField(km, { km = it.filter(Char::isDigit) }, label = { Text("Km") },
+            OutlinedTextField(km, { km = it.filter(Char::isDigit) }, label = { Text(stringResource(R.string.km)) },
                 keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number), modifier = Modifier.weight(1f))
-            OutlinedTextField(note, { note = it }, label = { Text("Note") }, modifier = Modifier.weight(1f))
+            OutlinedTextField(note, { note = it }, label = { Text(stringResource(R.string.note)) }, modifier = Modifier.weight(1f))
         }
         Spacer(Modifier.height(8.dp))
         Button(
@@ -251,18 +253,18 @@ fun MaintenanceScreen(vm: CarnetViewModel) {
                 }
             },
             modifier = Modifier.fillMaxWidth()
-        ) { Text("Enregistrer") }
+        ) { Text(stringResource(R.string.save)) }
         Spacer(Modifier.height(12.dp))
-        Text("Historique", style = MaterialTheme.typography.titleMedium)
+        Text(stringResource(R.string.history), style = MaterialTheme.typography.titleMedium)
         LazyColumn(verticalArrangement = Arrangement.spacedBy(8.dp)) {
             items(history, key = { it.id }) { r ->
                 Card(Modifier.fillMaxWidth()) {
                     Row(Modifier.fillMaxWidth().padding(12.dp), horizontalArrangement = Arrangement.SpaceBetween) {
                         Column(Modifier.weight(1f)) {
-                            Text("${MaintenanceType.labelFr(r.type)} — ${r.kmAtService} km", fontWeight = FontWeight.Bold)
-                            Text("Le ${LocalDate.ofEpochDay(r.dateEpochDay)}" + if (r.note.isNotBlank()) " — ${r.note}" else "")
+                            Text("${MaintenanceType.labelFr(r.type)} \u2014 ${r.kmAtService} km", fontWeight = FontWeight.Bold)
+                            Text("Le ${LocalDate.ofEpochDay(r.dateEpochDay)}" + if (r.note.isNotBlank()) " \u2014 ${r.note}" else "")
                         }
-                        TextButton(onClick = { vm.deleteMaintenance(r) }) { Text("×") }
+                        TextButton(onClick = { vm.deleteMaintenance(r) }) { Text("\u00d7") }
                     }
                 }
             }
@@ -278,29 +280,29 @@ fun FaultCodesScreen() {
     var expandedCode by remember { mutableStateOf<String?>(null) }
     val results = remember(query) { dz.carnautodz.data.FaultCodeCatalog.search(query) }
     Column(Modifier.fillMaxSize().padding(16.dp)) {
-        Text("Codes défaut OBD-II (hors ligne)", style = MaterialTheme.typography.titleLarge)
+        Text(stringResource(R.string.fault_title), style = MaterialTheme.typography.titleLarge)
         Spacer(Modifier.height(8.dp))
         OutlinedTextField(
             value = query, onValueChange = { query = it },
-            label = { Text("Rechercher (ex. P0300, ralenti, حساس)") },
+            label = { Text(stringResource(R.string.fault_search)) },
             modifier = Modifier.fillMaxWidth(), singleLine = true
         )
         Spacer(Modifier.height(8.dp))
-        Text("${results.size} codes", style = MaterialTheme.typography.bodySmall)
+        Text(stringResource(R.string.codes_count, results.size), style = MaterialTheme.typography.bodySmall)
         LazyColumn(verticalArrangement = Arrangement.spacedBy(8.dp)) {
             items(results, key = { it.code }) { fc ->
                 Card(Modifier.fillMaxWidth().clickable {
                     expandedCode = if (expandedCode == fc.code) null else fc.code
                 }) {
                     Column(Modifier.padding(12.dp)) {
-                        Text("${fc.code} — ${fc.titleFr}", fontWeight = FontWeight.Bold)
+                        Text("${fc.code} \u2014 ${fc.titleFr}", fontWeight = FontWeight.Bold)
                         Text(fc.titleAr)
                         if (expandedCode == fc.code) {
                             Spacer(Modifier.height(4.dp))
-                            Text("Système : ${fc.systemFr}", style = MaterialTheme.typography.bodySmall)
+                            Text("Syst\u00e8me : ${fc.systemFr}", style = MaterialTheme.typography.bodySmall)
                             Spacer(Modifier.height(4.dp))
                             Text("Conseil : ${fc.adviceFr}")
-                            Text("نصيحة: ${fc.adviceAr}")
+                            Text("\u0646\u0635\u064a\u062d\u0629: ${fc.adviceAr}")
                         }
                     }
                 }
@@ -325,21 +327,21 @@ fun ExpensesScreen(vm: CarnetViewModel) {
         VehiclePicker(vm)
         Spacer(Modifier.height(8.dp))
         if (vehicle == null) {
-            Text("Sélectionnez un véhicule.")
+            Text(stringResource(R.string.select_vehicle))
             return@Column
         }
         val total = remember(history) { Expenses.total(history) }
         val month = remember(history) { Expenses.currentMonthTotal(history) }
-        Text("Total : ${Expenses.formatDzd(total)} — ce mois : ${Expenses.formatDzd(month)}",
+        Text("Total : ${Expenses.formatDzd(total)} \u2014 ce mois : ${Expenses.formatDzd(month)}",
             style = MaterialTheme.typography.titleMedium)
         Spacer(Modifier.height(8.dp))
         Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
-            OutlinedTextField(amount, { amount = it.filter(Char::isDigit) }, label = { Text("Montant (DZD)") },
+            OutlinedTextField(amount, { amount = it.filter(Char::isDigit) }, label = { Text(stringResource(R.string.amount)) },
                 keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number), modifier = Modifier.weight(1f))
             ExposedDropdownMenuBox(expanded = expanded, onExpandedChange = { expanded = it }, modifier = Modifier.weight(1f)) {
                 OutlinedTextField(
                     value = ExpenseCategory.labelFr(category), onValueChange = {}, readOnly = true,
-                    label = { Text("Catégorie") },
+                    label = { Text(stringResource(R.string.category)) },
                     trailingIcon = { ExposedDropdownMenuDefaults.TrailingIcon(expanded) },
                     modifier = Modifier.menuAnchor()
                 )
@@ -354,7 +356,7 @@ fun ExpensesScreen(vm: CarnetViewModel) {
             }
         }
         Spacer(Modifier.height(8.dp))
-        OutlinedTextField(note, { note = it }, label = { Text("Note (optionnel)") }, modifier = Modifier.fillMaxWidth())
+        OutlinedTextField(note, { note = it }, label = { Text(stringResource(R.string.note_opt)) }, modifier = Modifier.fillMaxWidth())
         Spacer(Modifier.height(8.dp))
         Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
             Button(
@@ -366,15 +368,15 @@ fun ExpensesScreen(vm: CarnetViewModel) {
                     }
                 },
                 modifier = Modifier.weight(1f)
-            ) { Text("Ajouter") }
+            ) { Text(stringResource(R.string.add)) }
             OutlinedButton(onClick = { /* totals shown above; per-category shown below */ }, modifier = Modifier.weight(1f)) {
-                Text("Détail par catégorie ↓")
+                Text(stringResource(R.string.detail_cat))
             }
         }
         Spacer(Modifier.height(8.dp))
         val byCat = remember(history) { Expenses.byCategory(history) }
         if (byCat.isNotEmpty()) {
-            Text(byCat.entries.joinToString(" · ") { "${ExpenseCategory.labelFr(it.key)}: ${Expenses.formatDzd(it.value)}" },
+            Text(byCat.entries.joinToString(" \u00b7 ") { "${ExpenseCategory.labelFr(it.key)}: ${Expenses.formatDzd(it.value)}" },
                 style = MaterialTheme.typography.bodySmall)
             Spacer(Modifier.height(4.dp))
         }
@@ -383,11 +385,11 @@ fun ExpensesScreen(vm: CarnetViewModel) {
                 Card(Modifier.fillMaxWidth()) {
                     Row(Modifier.fillMaxWidth().padding(12.dp), horizontalArrangement = Arrangement.SpaceBetween) {
                         Column(Modifier.weight(1f)) {
-                            Text("${Expenses.formatDzd(e.amountDzd)} — ${ExpenseCategory.labelFr(e.category)}",
+                            Text("${Expenses.formatDzd(e.amountDzd)} \u2014 ${ExpenseCategory.labelFr(e.category)}",
                                 fontWeight = FontWeight.Bold)
-                            Text("Le ${LocalDate.ofEpochDay(e.dateEpochDay)}" + if (e.note.isNotBlank()) " — ${e.note}" else "")
+                            Text("Le ${LocalDate.ofEpochDay(e.dateEpochDay)}" + if (e.note.isNotBlank()) " \u2014 ${e.note}" else "")
                         }
-                        TextButton(onClick = { vm.deleteExpense(e) }) { Text("×") }
+                        TextButton(onClick = { vm.deleteExpense(e) }) { Text("\u00d7") }
                     }
                 }
             }
